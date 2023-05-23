@@ -17,6 +17,7 @@ class Document
 
     private function pdfToText()
     {
+        return false;
         try {
             $parser = new \Smalot\PdfParser\Parser();
             $pdf = $parser->parseFile($this->filePath);

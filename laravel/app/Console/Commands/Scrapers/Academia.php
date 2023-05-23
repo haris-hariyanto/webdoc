@@ -98,10 +98,8 @@ class Academia extends Command
                     continue;
                 }
 
-                $this->line('[ * ] BD');
                 $isDownloaded = $academiaHandler->download($document['download_url'], $document['file_type'], $document['thumbnail']);
-                $this->line('[ * ] AD');
-
+                
                 if ($isDownloaded['success'] == true) {
 
                     $isDownloaded = $isDownloaded['results'];
