@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
         
         \App\Models\Disk::create([
             'name' => 'Backblaze 1',
-            'access_key' => '004db05af61c4e40000000017',
-            'secret_key' => 'K004ZzzI9uEAOhTh1eHrSrv/kN4H8iE',
-            'bucket' => 'webdoc',
-            'endpoint' => 'https://s3.us-west-004.backblazeb2.com',
+            'access_key' => '005dc4b826608830000000001',
+            'secret_key' => 'K005K52CPpw6D7ZrBihYvIJsFR/C738',
+            'bucket' => 'academiascribd',
+            'endpoint' => 'https://s3.us-east-005.backblazeb2.com',
             'is_active' => 'Y',
         ]);
         

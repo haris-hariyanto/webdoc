@@ -18,6 +18,7 @@ class SettingsSeeder extends Seeder
         $settings = [
             'website' => [
                 'name' => 'Laravel',
+                'slug' => 'slug',
             ],
             'home' => [
                 'title' => '[app_name] - Search Documents, Notes, Summary, and Exam Prep for Free',
@@ -46,6 +47,7 @@ class SettingsSeeder extends Seeder
             ],
             'document' => [
                 'permalink' => 'document',
+                'slug' => 'slug',
             ],
             'search' => [
                 'permalink' => 'search',

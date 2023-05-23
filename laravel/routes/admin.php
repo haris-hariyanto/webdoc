@@ -5,8 +5,6 @@ use App\Http\Controllers;
 use Illuminate\Support\Facades\App;
 
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
-    App::setLocale('id');
-
     Route::get('/', function () {
         return redirect()->route('admin.documents.index');
     })->name('index');

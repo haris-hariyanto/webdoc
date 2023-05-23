@@ -166,7 +166,7 @@ class Academia
 
                     foreach ($works as $work) {
 
-                        if (!empty($work['language'])) {
+                        if (!empty($work['language']) && !empty($work['downloadableAttachments'][0])) {
                             $workType = $work['documentType'];
 
                             $workData = [];
