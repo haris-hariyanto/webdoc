@@ -1,0 +1,59 @@
+$container-padding-x: 1rem;
+$link-decoration: none;
+$link-hover-decoration: underline;
+$link-color: #059669;
+
+$white: #fff;
+$slate-300: #cbd5e1;
+$gray-800: #1f2937;
+
+$primary: #10b981;
+$secondary: #111827;
+
+$body-bg: #f1f5f9;
+$body-color: $gray-800;
+
+$navbar-dark-color: $white;
+$navbar-dark-hover-color: $white;
+
+$card-bg: $white;
+$card-border-width: 0;
+$card-border-color: null;
+
+@import "~bootstrap/scss/bootstrap";
+
+[x-cloak] {
+    display: none !important;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+a.footer-link {
+    color: $white;
+    &:hover {
+        color: $white;
+        text-decoration: underline;
+    }
+}
+
+p.footer-copyright {
+    color: $white;
+}
+
+.navbar-nav a.nav-link {
+    border-radius: .375rem;
+}
+
+.navbar-nav a.nav-link:hover {
+    background-color: #059669;
+}
+
+.btn.btn-primary, 
+.btn.btn-primary:active,
+.btn.btn-primary:focus-visible,
+.btn.btn-outline-primary:hover, 
+.btn.btn-outline-primary:focus-visible {
+    color: $white;
+}

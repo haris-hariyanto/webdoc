@@ -1,0 +1,139 @@
+<x-admin.layouts.app :breadcrumb="$breadcrumb">
+    <x-slot:pageTitle>{{ __('{{ resourceName }}') }}</x-slot>
+
+    @if (session('success'))
+        <x-admin.components.alert>
+            {{ session('success') }}
+        </x-admin.components.alert>
+    @endif
+
+    @if (session('error'))
+        <x-admin.components.alert type="danger">
+            {{ session('error') }}
+        </x-admin.components.alert>
+    @endif
+
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ route('{{ route }}.create') }}" class="btn btn-primary">{{ __('Create {{ resourceNameSingular }}') }}</a>
+    </div>
+
+    <div x-data="modalDelete">
+        <div class="card">
+            <div class="card-body">
+                <div id="toolbar">
+                    <button class="btn btn-danger disabled" type="button" data-toggle="modal" data-target="#modalBulkDelete" id="bulkDeleteBtn">{{ __('Delete') }}</button>
+                </div>
+                <table
+                    data-toggle="table"
+                    data-url="{{ route('{{ route }}.index.data') }}"
+                    data-pagination="true"
+                    data-side-pagination="server"
+                    data-search="true"
+                    data-show-columns="true"
+                    data-show-columns-toggle-all="true"
+                    data-toolbar="#toolbar"
+                    data-id-field="id"
+                    data-select-item-name="{{ modelInstancePlural }}"
+                    id="mainTable"
+                >
+                    <thead>
+                        <tr>
+                            <th data-checkbox="true"></th>
+                            <th data-field="id" data-sortable="true" data-width="1" data-visible="false">{{ __('ID') }}</th>
+                            {{ tableData }}
+                            <th data-field="menu" data-align="center" data-switchable="false" data-width="1">{{ __('Menu') }}</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+
+        <x-admin.components.modal name="delete">
+            <x-slot:modalTitle>{{ __('Delete {{ resourceNameSingular }}?') }}</x-slot>
+            <p class="mb-0">
+                {{ __('Delete {{ resourceNameSingular }}:') }} <span class="font-weight-bold" id="{{ modelInstance }}ToDelete" x-text="{{ modelInstance }}Name"></span>.
+                {{ __('Associated data will be deleted.') }}
+            </p>
+            <x-slot:modalFooter>
+                <form :action="linkDelete" method="POST" id="formDelete">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn btn-danger" type="submit">{{ __('Delete') }}</button>
+                </form>
+            </x-slot>
+        </x-admin.components.modal>
+
+        <x-admin.components.modal name="bulkDelete">
+            <x-slot:modalTitle>{{ __('Delete {{ resourceName }}?') }}</x-slot>
+            <p class="mb-0">
+                {!! __('Delete :count {{ modelInstancePlural }}?', ['count' => '<span id="total{{ resourceName }}ToDelete"></span>']) !!}
+                {{ __('Associated data will be deleted.') }}
+            </p>
+            <x-slot:modalFooter>
+                <form action="{{ route('admin.{{ modelInstancePlural }}.bulk-delete') }}" method="POST" id="formDelete">
+                    @csrf
+                    @method('DELETE')
+                    <input type="hidden" name="{{ modelInstancePlural }}IDToDelete" value="">
+                    <button type="submit" class="btn btn-danger" id="bulkDeleteSubmit">{{ __('Delete') }}</button>
+                </form>
+            </x-slot>
+        </x-admin.components.modal>
+    </div>
+
+    @push('scripts')
+        <link rel="stylesheet" href="{{ asset('assets/admin/plugins/bootstrap-table/bootstrap-table.min.css') }}">
+    @endpush
+
+    @push('scriptsBottom')
+        <script src="{{ asset('assets/admin/plugins/bootstrap-table/bootstrap-table.min.js') }}"></script>
+        <script>
+            document.addEventListener('alpine:init', () => {
+                Alpine.data('modalDelete', () => ({
+                    linkDelete: false,
+                    {{ modelInstance }}Name: false,
+                    deleteItem(e) {
+                        this.linkDelete = e.target.dataset.linkDelete;
+                        this.{{ modelInstance }}Name = e.target.dataset.name;
+                    },
+                }));
+            });
+
+            $('#mainTable').bootstrapTable({
+                onPostBody: function () {
+                    const bulkDeleteButton = document.getElementById('bulkDeleteBtn');
+                    const checkboxes = document.querySelectorAll('input[name="{{ modelInstancePlural }}"], input[name="btSelectAll"]');
+                    const total{{ resourceName }}ToDelete = document.getElementById('total{{ resourceName }}ToDelete');
+
+                    checkboxes.forEach(e => {
+                        e.addEventListener('change', () => {
+                            const checkedCheckboxes = document.querySelectorAll('input[name="{{ modelInstancePlural }}"]:checked');
+                            if (checkedCheckboxes.length > 0) {
+                                bulkDeleteButton.classList.remove('disabled');
+                                total{{ resourceName }}ToDelete.innerHTML = checkedCheckboxes.length;
+                            }
+                            else {
+                                bulkDeleteButton.classList.add('disabled');
+                            }
+                        });
+                    });
+                },
+            });
+
+            const bulkDeleteSubmit = document.getElementById('bulkDeleteSubmit');
+            const formDelete = document.getElementById('formDelete');
+            bulkDeleteSubmit.addEventListener('click', (e) => {
+                const {{ modelInstancePlural }}ToDelete = [];
+                const checkedCheckboxes = document.querySelectorAll('input[name="{{ modelInstancePlural }}"]:checked');
+                checkedCheckboxes.forEach(e => {
+                    {{ modelInstancePlural }}ToDelete.push(e.value);
+                });
+                const JSON{{ resourceName }}ToDelete = JSON.stringify({{ modelInstancePlural }}ToDelete);
+
+                const {{ modelInstance }}Field = document.querySelectorAll('input[name="{{ modelInstancePlural }}IDToDelete"]');
+                if ({{ modelInstance }}Field.length == 1) {
+                    {{ modelInstance }}Field[0].value = JSON{{ resourceName }}ToDelete;
+                }
+            });
+        </script>
+    @endpush
+</x-admin.layouts.app>
